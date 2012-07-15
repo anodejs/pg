@@ -10,4 +10,9 @@ srv.get('/', function(req, res) {
   res.send("Hello from anode!", 200);
 });
 
+srv.get('/anode/?', function(req, res) {
+  console.info('try1 anode');
+  res.send("Hello from anode again!", 200);
+});
+
 console.info('try1 started');
