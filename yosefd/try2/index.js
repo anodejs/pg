@@ -12,4 +12,9 @@ srv.get('/', function(req, res) {
   res.send('Hello from anode!', 200);
 });
 
+srv.get('/bad/?', function(req, res) {
+  console.error('very bad');
+  res.send('Forbidden zone', 403);
+});
+
 console.info('try2 started');
