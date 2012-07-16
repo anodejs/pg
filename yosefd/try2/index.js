@@ -3,6 +3,9 @@ var express = require('express');
 console.info('try2 starting');
 
 var srv = express.createServer();
+
+srv.use(express.logger());
+
 srv.listen(process.env.PORT || 5000);
 
 var count = 0;
