@@ -1,1 +1,0 @@
-require("C:\\anodedemo\\__system\\sys\\node_modules\\anode-shim").require(__dirname, 'index');
