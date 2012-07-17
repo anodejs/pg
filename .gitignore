@@ -3,8 +3,6 @@
 bin/*
 obj/*
 .DS_Store
-apps.json
-env.json
 .shimmed.*
 *.log
 .git.inner
