@@ -17,10 +17,4 @@ srv.get('/bad/?', function(req, res) {
   res.send('not here!!!', 403);
 });
 
-srv.get('/3min/?', function(req, res){
-  setTimeout(function(){
-    res.send('3min passed', 200);
-  }, 3 * 60 * 1000);
-});
-
 console.info('demo started');
