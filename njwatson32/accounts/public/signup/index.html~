@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <title>Sign up</title>
+  </head>
+  <body>
+    First Name: <input type="text" name="fst" /> Last Name: <input type="text" name="lst" />&nbsp;&nbsp;&nbsp;&nbsp;<b>OR</b>&nbsp;&nbsp;&nbsp;&nbsp;Company Name: <input type="text" name="name" /><br /><br />
+    Language: <select name="lang">
+      <option value="eng">English</option>
+      <option value="eng">Fran&ccedil;ais</option>
+      <option value="eng">Deutsch</option>
+      <option value="eng">Espa&ntilde;ol</option>
+    </select>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Sign up</title>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript">
+      function setUType(b) {
+        if (b) {
+          document.getElementById("cmp").disabled = true;
+          document.getElementById("fst").disabled = false;
+          document.getElementById("lst").disabled = false;
+        }
+        else {
+          document.getElementById("cmp").disabled = false;
+          document.getElementById("fst").disabled = true;
+          document.getElementById("lst").disabled = true;
+        }
+      }
+
+      function submit() {
+        var fst = document.getElementById('fst').value;
+        var lst = document.getElementById('lst').value;
+        var lang = document.getElementById('lang').value;
+        $.ajax({
+          url: "submit",
+          type: "POST",
+          //contentType: "application/xml",
+          data: 'fst=' + fst + '&lst=' + lst + '&lang=' + lang,
+          //data: '<?xml version="1.0"?><user>John Smith</user>',
+          //dataType: "xml",
+          success: function(data, textStatus, jqXHR) {
+            $('#result').empty().append('Account created successfully!');
+          },
+          error: function(jqXHR, textStatus, errorThrown) { alert('o noes!'); }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <input type="radio" name="utype" value="person" onclick="setUType(true)" checked="true" /> Person<br />
+    <input type="radio" name="utype" value="company" onclick="setUType(false)" /> Company<br /><br />
+    First Name: <input type="text" id="fst" /> Last Name: <input type="text" id="lst" />&nbsp;&nbsp;&nbsp;&nbsp;<b>OR</b>&nbsp;&nbsp;&nbsp;&nbsp;Company Name: <input type="text" id="cmp" disabled="true" /><br /><br />
+    Language: <select id="lang">
+      <option value="eng">English</option>
+      <option value="fre">Fran&ccedil;ais</option>
+      <option value="ger">Deutsch</option>
+      <option value="spa">Espa&ntilde;ol</option>
+    </select><br /><br />
+
+    <button id="sub" onclick="submit()">Submit</button>
+    <br /> <br />
+    <div id="result"></div>
+    
+  </body>
+</html>
