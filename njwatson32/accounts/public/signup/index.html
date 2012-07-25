@@ -3,32 +3,53 @@
     <title>Sign up</title>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript">
+      function e(id) {
+        return document.getElementById(id);
+      }
       function setUType(b) {
         if (b) {
-          document.getElementById("cmp").disabled = true;
-          document.getElementById("fst").disabled = false;
-          document.getElementById("lst").disabled = false;
+          e("cmp").disabled = true;
+          e("fst").disabled = false;
+          e("lst").disabled = false;
         }
         else {
-          document.getElementById("cmp").disabled = false;
-          document.getElementById("fst").disabled = true;
-          document.getElementById("lst").disabled = true;
+          e("cmp").disabled = false;
+          e("fst").disabled = true;
+          e("lst").disabled = true;
         }
       }
 
+      function newGuid() {
+        // Courtesy of stackoverflow, rfc4122 version 4 compliant
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+          return v.toString(16);
+        });
+      }
+
       function submit() {
-        var fst = document.getElementById('fst').value;
-        var lst = document.getElementById('lst').value;
-        var lang = document.getElementById('lang').value;
+        var fst = e('fst').value;
+        var lst = e('lst').value;
+        var cmp = e('cmp').value;
+        var lang = e('lang').value;
+        var aid = newGuid();
         $.ajax({
-          url: "submit",
+          url: '../' + aid + '/Account',
           type: "POST",
-          //contentType: "application/xml",
-          data: 'fst=' + fst + '&lst=' + lst + '&lang=' + lang,
-          //data: '<?xml version="1.0"?><user>John Smith</user>',
-          //dataType: "xml",
+          data: { id: aid, fst: fst, lst: lst, cmp: cmp, lang: lang },
+          dataType: "json",
           success: function(data, textStatus, jqXHR) {
-            $('#result').empty().append('Account created successfully!');
+            if (data == null) {
+              $('#result').empty().append('Account already exists.');
+            }
+            else {
+              e("sub").disabled = true;
+              $('#result').empty().append('Account created successfully!<br />');
+              $('#result').append('Redirecting you to Account home...');
+              setTimeout(function() {
+                window.location.href = '../' + aid + '/Account';
+              }, 2000);
+            }
           },
           error: function(jqXHR, textStatus, errorThrown) { alert('o noes!'); }
         });
