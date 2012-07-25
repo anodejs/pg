@@ -65,6 +65,6 @@ server.put('/:id/Account', function(req, res) {
     res.send(acct);
 });
 
-server.listen(process.env.PORT || 12345, function() {
+server.listen(process.env.PORT || port, function() {
   console.log('Server listening');
 });
