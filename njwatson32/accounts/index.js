@@ -1,4 +1,5 @@
 var express = require('express');
+var path = require('path');
 
 var server = express.createServer();
 var port = 12345;
@@ -29,7 +30,7 @@ server.configure(function() {
   server.use(express.methodOverride());
   server.use(express.bodyParser());
   server.use(server.router);
-  server.use(express.static(__dirname + '/public'));
+  server.use(express.static(path.join(__dirname, 'public')));
   server.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
