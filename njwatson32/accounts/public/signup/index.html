@@ -28,9 +28,14 @@
       }
 
       function submit() {
-        var fst = e('fst').value;
-        var lst = e('lst').value;
-        var cmp = e('cmp').value;
+        var fst = '', lst = '', cmp = '';
+        if (e('cmp').disabled) {
+          fst = e('fst').value;
+          lst = e('lst').value;
+        }
+        else {
+          cmp = e('cmp').value;
+        }
         var lang = e('lang').value;
         var aid = newGuid();
         $.ajax({
