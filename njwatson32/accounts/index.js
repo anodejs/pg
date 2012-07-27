@@ -5,9 +5,11 @@ var fs = require('fs');
 var server = express.createServer();
 var port = 12345;
 
+// would actually be some db primary keyed by account id
+// with nonclustered index on liveId
 var accounts = new Object();
+var attributes = new Object();
 
-// stubbed out, eventually use mongodb
 function addAccount(req) {
   if (accounts[req.params.id] != undefined)
     return null;
@@ -54,7 +56,7 @@ server.get('/:id/Account', function(req, res) {
   if (acct == null)
     res.send("Account not found!", 404);
   else
-    res.send(acct);
+    res.json(acct);
 });
 
 server.get(':id/Account/home', function(req, res) {
@@ -104,8 +106,76 @@ server.put('/:id/Account', function(req, res) {
   if (acct == null)
     res.send('Account not found!', 404);
   else
-    res.send(acct);
+    res.json(acct);
 });
+
+server.get('/GetAccountIdByIdentity(:identity)', function(req, res) {
+  function reverseLookup(fstId, sndId) {
+    for (var aid in accounts)
+      if (accounts[aid].liveId == fstId)
+        return { id: aid };
+    return null;
+  }
+
+  try {
+    // This is obviously extremely vulnerable to a JS injection,
+    // but this is just code for an internal demo with fake users
+    // so I'm not going to bother with sanitization.
+    var aid = eval('reverseLookup' + req.params.identity);
+    if (aid)
+      res.json(aid);
+    else
+      res.send('Account not found!', 404);
+  } catch (e) {
+    if (e.name == 'ReferenceError')
+      res.send('Invalid request. Did you remember to enclose your Live ID in single quotes?', 400);
+    else
+      throw e;
+  }
+});
+
+server.get('/:id/Attributes(:name)', function(req, res) {
+  var aid = req.params.id;
+  function getAttr(name) {
+    var attrs = attributes[aid];
+    if (attrs == undefined)
+      return undefined;
+    return attrs[name];
+  }
+  // Same deal as above with the injection
+  var attr = eval('getAttr' + req.params.name);
+  if (attr)
+    res.json({ name: req.params.name, value: attr });
+  else
+    res.send("Attribute not found. This may be because there is no attribute with this name or the account does not exist.", 404);
+});
+
+server.put('/:id/Attributes(:name)', function(req, res) {
+  var aid = req.params.id;
+  if (attributes[aid] == undefined)
+    attributes[aid] = new Object();
+  attributes[aid][req.body.name] = req.body.value;
+  res.json(req.body);
+});
+  
+
+server.del('/:id/Attributes(:name)', function(req, res) {
+  var aid = req.params.id;
+  function delAttr(name) {
+    var attrs = attributes[aid];
+    if (attrs == undefined || attrs[name] == undefined)
+      return false;
+    delete attrs[name];
+    return true;
+  }
+  // Same deal as above with the injection
+  var success = eval('delAttr' + req.params.name);
+  if (success)
+    res.send(204);
+  else
+    res.send("Attribute not found. This may be because there is no attribute with this name or the account does not exist.", 404);
+});
+  
 
 server.post('/signup/submit', function(req, res) {
   console.log(req);
