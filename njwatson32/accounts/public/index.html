@@ -2,11 +2,33 @@
 <html>
   <head>
     <title>Contoco Corp</title>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript">
+      function login() {
+        var liveId = document.getElementById('liveid').value;
+        $.ajax({
+          url: "GetAccountIdByIdentity('" + liveId + "')",
+          type: "GET",
+          dataType: "json",
+          success: function(data, textStatus, jqXHR) {
+            if (data == null) {
+              alert("LiveId not found!");
+            }
+            else {
+              window.location.href = data.id + '/Account/home';
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); }
+        });
+      }
+    </script>
   </head>
   <body>
     Welcome to the Contoco Corp homepage!
     <br /><br />
-    <a href="signup">Sign Up!</a><br />
-    <!--a href="login">Login</a><br /-->
+    <a href="signup">Sign Up!</a><br /><br />
+    Already have an account? Login! <br />
+    <input type="text" id="liveid" /><br />
+    <button id="l" onclick="login()">Login</button>
   </body>
 </html>

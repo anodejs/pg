@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Account Home</title>
+    <script type="text/javascript">
+      function editUser() {
+        window.location.href = './edit';
+      }
+    </script>
+  </head>
+  <body>
+    Account Data:<br /><br />
+    __ACCT__
+    <br />
+    <br />
+    <button id="edit" onclick="editUser()">Edit</button><br /><br />
+    Attributes:<br /><br />
+    __ATTR__
+    <br /><br />
+    <button id="addA" onclick="addAttr()">Add</button>&nbsp;&nbsp;
+    <button id="editA" onclick="editAttr()">Edit</button>&nbsp;&nbsp;
+    <button id="delA" onclick="delAttr()">Delete</button>
+    <br /><br /><br />
+    <a href="/">Logout</button>
+  </body>
+</html>

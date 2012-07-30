@@ -59,8 +59,21 @@ server.get('/:id/Account', function(req, res) {
     res.json(acct);
 });
 
-server.get(':id/Account/home', function(req, res) {
-  
+server.get('/:id/Account/home', function(req, res) {
+  var acct = getAccount(req.params.id);
+  if (acct == null) {
+    res.send("Account not found!", 404);
+    return;
+  }
+  fs.readFile(path.join(__dirname, 'account_home.html'), function(err, data) {
+    if (err) {
+      rest.send(err, 500);
+      return;
+    }
+    data = data.toString().replace('__ACCT__', htmlStringify(acct))
+      .replace('__ATTR__', 'attributes here');
+    res.send(data);
+  });
 });
 
 server.get('/:id/Account/edit', function(req, res) {
