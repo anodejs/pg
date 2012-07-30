@@ -65,9 +65,9 @@ server.get('/:id/Account/home', function(req, res) {
     res.send("Account not found!", 404);
     return;
   }
-  fs.readFile(path.join(__dirname, 'account_home.html'), function(err, data) {
+  fs.readFile(path.join(__dirname, 'public', 'account_home.html'), function(err, data) {
     if (err) {
-      rest.send(err, 500);
+      res.send(err, 500);
       return;
     }
     data = data.toString().replace('__ACCT__', htmlStringify(acct))
@@ -81,7 +81,7 @@ server.get('/:id/Account/edit', function(req, res) {
   if (acct == null)
     res.send("Account not found!", 404);
   else {
-    fs.readFile(path.join(__dirname, 'edit_account.html'), function(err, data) {
+    fs.readFile(path.join(__dirname, 'public', 'edit_account.html'), function(err, data) {
       if (err) {
         res.send(err, 500);
         return;
