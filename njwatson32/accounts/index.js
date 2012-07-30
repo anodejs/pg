@@ -51,57 +51,14 @@ function htmlStringify(obj) {
   return str + '}';
 }
 
+// ----------------- REST Interface -----------------
+
 server.get('/:id/Account', function(req, res) {
   var acct = getAccount(req.params.id);
   if (acct == null)
     res.send("Account not found!", 404);
   else
     res.json(acct);
-});
-
-server.get('/:id/Account/home', function(req, res) {
-  var acct = getAccount(req.params.id);
-  if (acct == null) {
-    res.send("Account not found!", 404);
-    return;
-  }
-  fs.readFile(path.join(__dirname, 'public', 'account_home.html'), function(err, data) {
-    if (err) {
-      res.send(err, 500);
-      return;
-    }
-    data = data.toString().replace('__ACCT__', htmlStringify(acct))
-      .replace('__ATTR__', 'attributes here');
-    res.send(data);
-  });
-});
-
-server.get('/:id/Account/edit', function(req, res) {
-  var acct = getAccount(req.params.id);
-  if (acct == null)
-    res.send("Account not found!", 404);
-  else {
-    fs.readFile(path.join(__dirname, 'public', 'edit_account.html'), function(err, data) {
-      if (err) {
-        res.send(err, 500);
-        return;
-      }
-      var nameHtml = 'First Name: <input type="text" id="fst" value="__FST__"/> Last Name: <input type="text" id="lst" value="__LST__"/>';
-      if (acct.cmp != '')
-        nameHtml = 'Company Name: <input type="text" id="cmp" value="__CMP__"/>'
-      data = data.toString().replace('__NAME_HTML__', nameHtml)
-        .replace('__ACCT_OBJ__', htmlStringify(acct))
-        .replace('__ACCT_ID__', req.params.id)
-        .replace('__FST__', acct.fst)
-        .replace('__LST__', acct.lst)
-        .replace('__CMP__', acct.cmp)
-        .replace('__LIVE_ID__', acct.liveId)
-        .replace('__PUID__', acct.puid)
-        .replace('__LANG__', acct.lang)
-        .replace('__C__', acct.country);
-      res.send(data);
-    });
-  }
 });
 
 server.post('/:id/Account', function(req, res) {
@@ -134,6 +91,8 @@ server.get('/GetAccountIdByIdentity(:identity)', function(req, res) {
     // This is obviously extremely vulnerable to a JS injection,
     // but this is just code for an internal demo with fake users
     // so I'm not going to bother with sanitization.
+    // (Also, it provides a convenient way for me to debug, since
+    //  I can inject code to look at the contents of accounts.)
     var aid = eval('reverseLookup' + req.params.identity);
     if (aid)
       res.json(aid);
@@ -188,12 +147,86 @@ server.del('/:id/Attributes(:name)', function(req, res) {
   else
     res.send("Attribute not found. This may be because there is no attribute with this name or the account does not exist.", 404);
 });
-  
 
-server.post('/signup/submit', function(req, res) {
-  console.log(req);
-  res.send('<data><result>0</result><aid>' + newGuid() + '</aid></data>',
-           { 'Content-Type': 'application/xml' }, 201);
+// ---------------- Test Interface ----------------
+
+server.get('/:id/Account/home', function(req, res) {
+  var acct = getAccount(req.params.id);
+  if (acct == null) {
+    res.send("Account not found!", 404);
+    return;
+  }
+  fs.readFile(path.join(__dirname, 'public', 'account_home.html'), function(err, data) {
+    if (err) {
+      res.send(err, 500);
+      return;
+    }
+    data = data.toString().replace('__ACCT__', htmlStringify(acct))
+      .replace('__ATTR__', htmlStringify(attributes[req.params.id]));
+    res.send(data);
+  });
+});
+
+server.get('/:id/Account/edit', function(req, res) {
+  var acct = getAccount(req.params.id);
+  if (acct == null)
+    res.send("Account not found!", 404);
+  else {
+    fs.readFile(path.join(__dirname, 'public', 'edit_account.html'), function(err, data) {
+      if (err) {
+        res.send(err, 500);
+        return;
+      }
+      var nameHtml = 'First Name: <input type="text" id="fst" value="__FST__"/> Last Name: <input type="text" id="lst" value="__LST__"/>';
+      if (acct.cmp != '')
+        nameHtml = 'Company Name: <input type="text" id="cmp" value="__CMP__"/>'
+      data = data.toString().replace('__NAME_HTML__', nameHtml)
+        .replace('__ACCT_OBJ__', htmlStringify(acct))
+        .replace('__ACCT_ID__', req.params.id)
+        .replace('__FST__', acct.fst)
+        .replace('__LST__', acct.lst)
+        .replace('__CMP__', acct.cmp)
+        .replace('__LIVE_ID__', acct.liveId)
+        .replace('__PUID__', acct.puid)
+        .replace('__LANG__', acct.lang)
+        .replace('__C__', acct.country);
+      res.send(data);
+    });
+  }
+});
+
+server.get('/:id/Account/addAttr', function(req, res) {
+  var acct = getAccount(req.params.id);
+  if (acct == null) {
+    res.send("Account not found!", 404);
+    return;
+  }
+  fs.readFile(path.join(__dirname, 'public', 'add_attr.html'), function(err, data) {
+    if (err) {
+      res.send(err, 500);
+      return;
+    }
+    res.send(data.toString());
+  });
+});
+
+server.get('/:id/Account/delAttr', function(req, res) {
+  var acct = getAccount(req.params.id);
+  if (acct == null) {
+    res.send("Account not found!", 404);
+    return;
+  }
+  fs.readFile(path.join(__dirname, 'public', 'del_attr.html'), function(err, data) {
+    if (err) {
+      res.send(err, 500);
+      return;
+    }
+    var attrList = ''
+    for (var name in attributes[req.params.id])
+      attrList += '<option value="' + name + '">' + name + '</option>';
+    data = data.toString().replace('__ATTRS__', attrList);
+    res.send(data);
+  });
 });
 
 server.listen(process.env.PORT || port, function() {

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Delete Attribute</title>
+    <script type="text/javascript" src="../../jquery.js"></script>
+    <script type="text/javascript">
+      function delAttr() {
+        var name = document.getElementById('alist').value;
+        $.ajax({
+          url: "../Attributes('" + name + "')",
+          type: "DELETE",
+          success: function(data, textStatus, jqXHR) {
+            document.getElementById('del').disabled = true;
+            $('#res').empty().append('Attribute deleted successfully!<br />');
+            $('#res').append('Redirecting you to Account home...');
+            setTimeout(function() {
+                window.location.href = './home';
+              }, 2000);
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            alert(textStatus);
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    Delete Attribute<br /><br />
+    Attributes: <select id="alist">
+      __ATTRS__
+    </select><br /><br />
+    <button id="del" onclick="delAttr()">Delete</button><br /><br />
+    <div id="res"></div>
+  </body>
+</html>
