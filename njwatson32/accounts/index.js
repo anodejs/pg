@@ -188,7 +188,7 @@ server.get('/', function(req, res) {
         name = td(acct.cmp) + td('-');
       entries += '<tr>' + del(acct) +
         td('<a href="/' + acct.id + '/Account/home">' + acct.id + '</a>') +
-        name + td(acct.email) + td(acct.liveId) + td(acct.puid) +
+        name + td(acct.email) + /* td(acct.liveId) + td(acct.puid) + */
         td(acct.lang) + td(acct.country) + '</tr>';
     }
     res.send(data.toString().replace('__ACCTS__', entries));
@@ -232,8 +232,8 @@ server.get('/:id/Account/edit', function(req, res) {
         .replace('__LST__', acct.lst)
         .replace('__CMP__', acct.cmp)
         .replace('__EMAIL__', acct.email)
-        .replace('__LIVE_ID__', acct.liveId)
-        .replace('__PUID__', acct.puid)
+//      .replace('__LIVE_ID__', acct.liveId)
+//      .replace('__PUID__', acct.puid)
         .replace('__LANG__', acct.lang)
         .replace('__C__', acct.country);
       res.send(data);

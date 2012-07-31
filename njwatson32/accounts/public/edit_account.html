@@ -21,15 +21,16 @@
         cmp = e('cmp').value;
       }
       var email = e('email').value;
-      var liveId = e('liveid').value;
-      var puid = e('puid').value;
+      //var liveId = e('liveid').value;
+      //var puid = e('puid').value;
       var lang = e('lang').value;
       var country = e('c').value;
       $.ajax({
           url: '.',
           type: "PUT",
           data: { id: aid, fst: fst, lst: lst, cmp: cmp, email: email,
-                  liveId: liveId, puid: puid, lang: lang, country: country },
+                  /* liveId: liveId, puid: puid, */
+                  lang: lang, country: country },
           dataType: "json",
           success: function(data, textStatus, jqXHR) {
             if (data == null) {
@@ -58,8 +59,8 @@
     __NAME_HTML__
     <br /><br />
     Email: <input type="text" id="email" value="__EMAIL__" /><br />
-    LiveId: <input type="text" id="liveid" value="__LIVE_ID__" /><br />
-    PUID: <input type="text" id="puid" value = "__PUID__" /><br /><br />
+    <!--LiveId: <input type="text" id="liveid" value="__LIVE_ID__" /><br />-->
+    <!--PUID: <input type="text" id="puid" value = "__PUID__" /><br /><br />-->
     Language: <select id="lang" value="__LANG__">
       <option value="eng">English</option>
       <option value="fre">Fran&ccedil;ais</option>
