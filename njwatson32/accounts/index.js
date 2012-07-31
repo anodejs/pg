@@ -34,6 +34,13 @@ function updateAccount(req) {
   return req.body;
 }
 
+function deleteAccount(id) {
+  if (accounts[id] == undefined)
+    return false;
+  delete accounts[id];
+  return true;
+}
+
 server.configure(function() {
   server.use(express.methodOverride());
   server.use(express.bodyParser());
@@ -77,6 +84,14 @@ server.put('/:id/Account', function(req, res) {
     res.send('Account not found!', 404);
   else
     res.json(acct);
+});
+
+server.del('/:id/Account', function(req, res) {
+  var success = deleteAccount(req.params.id);
+  if (success)
+    res.send(204);
+  else
+    res.send(404);
 });
 
 server.get('/GetAccountIdByIdentity(:identity)', function(req, res) {
@@ -149,6 +164,33 @@ server.del('/:id/Attributes(:name)', function(req, res) {
 });
 
 // ---------------- Test Interface ----------------
+
+server.get('/', function(req, res) {
+  fs.readFile(path.join(__dirname, 'public', 'all_accounts.html'), function(err, data) {
+    if (err) {
+      res.send(err, 500);
+      return;
+    }
+    
+    function td(name) {
+      return '<td>' + name + '</td>';
+    }
+    function del(acct) {
+      return '<td><input type="checkbox" name="del" value="' +
+        acct.id + '"/></td>';
+    }
+
+    var entries = '';
+    for (var aid in accounts) {
+      acct = accounts[aid];
+      entries += '<tr>' + del(acct) +
+        td('<a href="/' + acct.id + '/Account/home">' + acct.id + '</a>') +
+        td(acct.fst) + td(acct.lst) + td(acct.email) + td(acct.liveId) +
+        td(acct.puid) + td(acct.lang) + td(acct.country) + '</tr>';
+    }
+    res.send(data.toString().replace('__ACCTS__', entries));
+  });
+});
 
 server.get('/:id/Account/home', function(req, res) {
   var acct = getAccount(req.params.id);

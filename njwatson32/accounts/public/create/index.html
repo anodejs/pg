@@ -37,6 +37,7 @@
         else {
           cmp = e('cmp').value;
         }
+        var email = e('email').value;
         var liveId = e('liveid').value;
         var puid = e('puid').value;
         var lang = e('lang').value;
@@ -45,8 +46,8 @@
         $.ajax({
           url: '../' + aid + '/Account',
           type: "POST",
-          data: { id: aid, fst: fst, lst: lst, cmp: cmp, liveId: liveId,
-                  puid: puid, lang: lang, country: country },
+          data: { id: aid, fst: fst, lst: lst, cmp: cmp, email: email,
+                  liveId: liveId, puid: puid, lang: lang, country: country },
           dataType: "json",
           success: function(data, textStatus, jqXHR) {
             if (data == null) {
@@ -70,6 +71,7 @@
     <input type="radio" name="utype" value="person" onclick="setUType(true)" checked="true" /> Person<br />
     <input type="radio" name="utype" value="company" onclick="setUType(false)" /> Company<br /><br />
     First Name: <input type="text" id="fst" /> Last Name: <input type="text" id="lst" />&nbsp;&nbsp;&nbsp;&nbsp;<b>OR</b>&nbsp;&nbsp;&nbsp;&nbsp;Company Name: <input type="text" id="cmp" disabled="true" /><br /><br />
+    Email: <input type="text" id="email" /><br />
     LiveId: <input type="text" id="liveid" /><br />
     PUID: <input type="text" id="puid" /><br /><br />
     Language: <select id="lang">

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>All Accounts</title>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript">
+      function createAcct() {
+        window.location.href = '/create';
+      }
+
+      function delAcct(i, accts, err) {
+        if (i == accts.length) {
+          if (err != '')
+            alert("These accounts couldn't be deleted: " + err);
+          location.reload();
+          return;
+        }
+        $.ajax({          
+          url: '/' + accts[i] + '/Account',
+          type: "DELETE",
+          success: function() {
+            delAcct(i + 1, accts, err);
+          },
+          error: function() {
+            err += accts[i] + ' ';
+            delAcct(i + 1, accts, err);
+          }
+        });
+      }
+
+      function delAccts() {
+        var cboxes = document.getElementsByName('del');
+        var deletes = [];
+        for (var i = 0; i < cboxes.length; i++) {
+          if (cboxes[i].checked)
+            deletes.push(cboxes[i].value);
+        }
+        delAcct(0, deletes, '');
+      }
+    </script>
+  </head>
+  <body>
+    All Accounts<br /><br />
+    <table border="1">
+      <tr>
+        <th></th>
+        <th>Acct ID</th>
+        <th>First</th>
+        <th>Last</th>
+        <th>Email</th>
+        <th>LiveID</th>
+        <th>PUID</th>
+        <th>Language</th>
+        <th>Country</th>
+      </tr>
+      __ACCTS__
+    </table>
+    <br /><br />
+    <button id="create" onclick="createAcct()">Create Account</button>
+    &nbsp;&nbsp;&nbsp;
+    <button id="delete" onclick="delAccts()">Delete Selected</button>
+  </body>
+</html>
