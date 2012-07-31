@@ -29,6 +29,7 @@
       }
 
       function submit() {
+        e("sub").disabled = true;
         var fst = '', lst = '', cmp = '';
         if (e('cmp').disabled) {
           fst = e('fst').value;
@@ -54,7 +55,6 @@
               $('#result').empty().append('Account already exists.');
             }
             else {
-              e("sub").disabled = true;
               $('#result').empty().append('Account created successfully!<br />');
               $('#result').append('Redirecting you to Account home...');
               setTimeout(function() {
@@ -62,7 +62,10 @@
               }, 2000);
             }
           },
-          error: function(jqXHR, textStatus, errorThrown) { alert(textStatus); }
+          error: function(jqXHR, textStatus, errorThrown) {
+            alert(textStatus);
+            e("sub").disabled = false;
+           }
         });
       }
     </script>

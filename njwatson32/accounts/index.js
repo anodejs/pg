@@ -183,10 +183,13 @@ server.get('/', function(req, res) {
     var entries = '';
     for (var aid in accounts) {
       acct = accounts[aid];
+      var name = td(acct.fst) + td(acct.lst);
+      if (acct.cmp)
+        name = td(acct.cmp) + td('-');
       entries += '<tr>' + del(acct) +
         td('<a href="/' + acct.id + '/Account/home">' + acct.id + '</a>') +
-        td(acct.fst) + td(acct.lst) + td(acct.email) + td(acct.liveId) +
-        td(acct.puid) + td(acct.lang) + td(acct.country) + '</tr>';
+        name + td(acct.email) + td(acct.liveId) + td(acct.puid) +
+        td(acct.lang) + td(acct.country) + '</tr>';
     }
     res.send(data.toString().replace('__ACCTS__', entries));
   });
@@ -228,6 +231,7 @@ server.get('/:id/Account/edit', function(req, res) {
         .replace('__FST__', acct.fst)
         .replace('__LST__', acct.lst)
         .replace('__CMP__', acct.cmp)
+        .replace('__EMAIL__', acct.email)
         .replace('__LIVE_ID__', acct.liveId)
         .replace('__PUID__', acct.puid)
         .replace('__LANG__', acct.lang)
