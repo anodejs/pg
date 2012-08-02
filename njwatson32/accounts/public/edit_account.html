@@ -9,6 +9,10 @@
       return document.getElementById(id);
     }
 
+    function goBack() {
+      window.location.href = './home';
+    }
+
     function editAcct() {
       e("edit").disabled = true;
       var aid = e('aid').value;
@@ -28,7 +32,7 @@
       $.ajax({
           url: '.',
           type: "PUT",
-          data: { id: aid, fst: fst, lst: lst, cmp: cmp, email: email,
+          data: { aid: aid, fst: fst, lst: lst, cmp: cmp, email: email,
                   /* liveId: liveId, puid: puid, */
                   lang: lang, country: country },
           dataType: "json",
@@ -76,6 +80,8 @@
     </select><br /><br />
 
     <button id="edit" onclick="editAcct()">Submit Changes</button>
+    &nbsp;
+    <button id="cancel" onclick="goBack()">Cancel</button>
     <br /> <br />
     <div id="result"></div>
   </body>

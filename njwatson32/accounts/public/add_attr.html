@@ -4,6 +4,10 @@
     <title>Add Attribute</title>
     <script type="text/javascript" src="../../jquery.js"></script>
     <script type="text/javascript">
+      function goBack() {
+        window.location.href = './home';
+      }
+
       function addAttr() {
         var name = document.getElementById('name').value;
         var value = document.getElementById('value').value;
@@ -33,7 +37,10 @@
     Add Attribute<br /><br />
     Name: <input type="text" id="name" /><br />
     Value: <input type="text" id="value" /><br />
-    <button id="add" onclick="addAttr()">Add</button><br /><br />
+    <button id="add" onclick="addAttr()">Add</button>
+    &nbsp;
+    <button id="cancel" onclick="goBack()">Cancel</button>
+    <br /><br />
     <div id="res"></div>
   </body>
 </html>

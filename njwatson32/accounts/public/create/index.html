@@ -47,13 +47,14 @@
         $.ajax({
           url: '../' + aid + '/Account',
           type: "POST",
-          data: { id: aid, fst: fst, lst: lst, cmp: cmp, email: email,
+          data: { aid: aid, fst: fst, lst: lst, cmp: cmp, email: email,
                   /* liveId: liveId, puid: puid, */
                   lang: lang, country: country },
           dataType: "json",
           success: function(data, textStatus, jqXHR) {
             if (data == null) {
               $('#result').empty().append('Account already exists.');
+              e("sub").disabled = false;
             }
             else {
               $('#result').empty().append('Account created successfully!<br />');
