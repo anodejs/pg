@@ -281,8 +281,7 @@ server.get('/', function(req, res) {
           name + td(acct.email) + /* td(acct.liveId) + td(acct.puid) + */
         td(acct.lang) + td(acct.country) + '</tr>';
       }
-      data = data.toString().replace('All Accounts', 'Nick is awesome');
-      res.send(data.replace('__ACCTS__', entries));
+      res.send(data.toString().replace('__ACCTS__', entries));
     });
   });
 });
@@ -373,6 +372,10 @@ server.get('/:aid/Account/delAttr', function(req, res) {
       res.send(data);
     });
   });
+});
+
+server.get('/about', function(_, res) {
+  res.send('Nick is great');
 });
 
 server.listen(process.env.PORT || port, function() {
