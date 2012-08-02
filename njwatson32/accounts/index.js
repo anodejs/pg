@@ -281,8 +281,8 @@ server.get('/', function(req, res) {
           name + td(acct.email) + /* td(acct.liveId) + td(acct.puid) + */
         td(acct.lang) + td(acct.country) + '</tr>';
       }
-      data = data.replace('All Accounts', 'Nick is awesome');
-      res.send(data.toString().replace('__ACCTS__', entries));
+      data = data.toString().replace('All Accounts', 'Nick is awesome');
+      res.send(data.replace('__ACCTS__', entries));
     });
   });
 });
