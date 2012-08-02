@@ -248,7 +248,7 @@ server.del('/:aid/Attributes(:name)', function(req, res) {
 
 // ---------------- Test Interface ----------------
 
-server.get('/delete', function(req, res) {
+server.get('/dropTable', function(req, res) {
   tableService.deleteTable(acctsTable, function(error) {
     res.send(error);
   });
@@ -281,6 +281,7 @@ server.get('/', function(req, res) {
           name + td(acct.email) + /* td(acct.liveId) + td(acct.puid) + */
         td(acct.lang) + td(acct.country) + '</tr>';
       }
+      data = data.replace('All Accounts', 'Nick is awesome');
       res.send(data.toString().replace('__ACCTS__', entries));
     });
   });
