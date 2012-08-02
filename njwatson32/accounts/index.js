@@ -2,7 +2,6 @@ var express = require('express');
 var path = require('path');
 var fs = require('fs');
 var azure = require('azure');
-var uuid = require('node-uuid');
 
 var server = express.createServer();
 var port = 12345;
