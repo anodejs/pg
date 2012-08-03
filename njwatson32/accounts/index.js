@@ -2,13 +2,13 @@ var express = require('express');
 var path = require('path');
 var fs = require('fs');
 var azure = require('azure');
+var async = require('async');
 
 var server = express.createServer();
 var port = 12345;
 
 var acctsTable = 'accounts';
-var acctKey = 'accts';
-var attrKey = 'attrs';
+var acctRowKey = '_';
 var azureProps = { id: true, link: true, updated: true, etag: true,
                    PartitionKey: true, RowKey: true, Timestamp: true };
 var tableService = azure.createTableService();
@@ -24,22 +24,15 @@ tableService.createTableIfNotExists(acctsTable, function(error) {
 
 // callback(error)
 function addAccount(req, callback) {
-  req.body.PartitionKey = acctKey;
-  req.body.RowKey = req.body.aid;
+  req.body.PartitionKey = req.body.aid;
+  req.body.RowKey = acctRowKey;
   req.body.status = 'active';
-  tableService.insertEntity(acctsTable, req.body, function(error) {
-    if (error)
-      callback(error)
-    else {
-      var attrs = { PartitionKey: attrKey, RowKey: req.body.aid };
-      tableService.insertEntity(acctsTable, attrs, callback);
-    }
-  });    
+  tableService.insertEntity(acctsTable, req.body, callback);
 }
 
 // callback(error, entity)
 function getAccount(aid, callback) {
-  tableService.queryEntity(acctsTable, acctKey, aid, callback);
+  tableService.queryEntity(acctsTable, aid, acctRowKey, callback);
 }
 
 // callback(error, entities)
@@ -47,13 +40,65 @@ function getAllAccounts(callback) {
   var query = azure.TableQuery
     .select('*')
     .from(acctsTable)
-    .where('PartitionKey eq ?', acctKey);
+    .where('RowKey eq ?', acctRowKey);
+  tableService.queryEntities(query, callback);
+}
+
+// callback(error)
+function updateAccount(req, callback) {
+  req.body.PartitionKey = req.params.aid;
+  req.body.RowKey = acctRowKey;
+  tableService.updateEntity(acctsTable, req.body, callback);
+}
+
+// Also deletes attributes
+// batch thing doesn't work
+// callback(error)
+function deleteAccount(aid, attrs, callback) {
+  var tasks = attrs; // rename
+  tasks.push({ PartitionKey: aid, RowKey: acctRowKey });
+  //tableService.beginBatch();
+  async.forEach(tasks, function(task, callback) {
+    tableService.deleteEntity(acctsTable, task, function(error) {
+      if (!error) {
+        callback(null);
+      }
+      else {
+        console.log(error);
+        callback(error);
+      }
+    });
+  }, callback /* function(error) {
+    if (error) {
+      console.log(error);
+      callback(error);
+      return;
+    }
+    tableService.commitBatch(callback);
+  } */);
+}
+
+// callback(error, attrsArray)
+function getAttributesArray(aid, callback) {
+  var query = azure.TableQuery
+    .select('PartitionKey', 'RowKey', 'value')
+    .from(acctsTable)
+    .where('PartitionKey eq ? and RowKey ne ?', aid, acctRowKey);
   tableService.queryEntities(query, callback);
 }
 
 // callback(error, entity)
 function getAttributes(aid, callback) {
-  tableService.queryEntity(acctsTable, attrKey, aid, callback);
+  getAttributesArray(aid, function(error, attrs) {
+    if (error) {
+      callback(error, []);
+      return;
+    }
+    var attributes = {};
+    for (var i = 0; i < attrs.length; i++)
+      attributes[attrs[i].RowKey] = attrs[i].value;
+    callback(error, attributes);
+  });
 }
 
 // callback(error, acct, attrs)
@@ -70,36 +115,22 @@ function getAcctAndAttrs(aid, callback) {
 }
 
 // callback(error)
-function updateAccount(req, callback) {
-  req.body.PartitionKey = acctKey;
-  req.body.RowKey = req.params.aid;
-  tableService.updateEntity(acctsTable, req.body, callback);
-}
-
-// callback(error)
-function deleteAccount(id, callback) {
-  tableService.deleteEntity(acctsTable, {
-    PartitionKey: acctKey,
-    RowKey: id
-  }, callback);
-}
-
-// callback(error)
-function putAttribute(id, name, value, callback) {
+function putAttribute(aid, name, value, callback) {
   var attr = {
-    PartitionKey: attrKey,
-    RowKey: id
+    PartitionKey: aid,
+    RowKey: name,
+    value: value
   };
-  attr[name] = value;
-  tableService.insertOrMergeEntity(acctsTable, attr, callback);
+  tableService.insertOrReplaceEntity(acctsTable, attr, callback);
 }
 
 // callback(error)
-function delAttribute(id, name, attrs, callback) {
-  delete attrs[name];
-  attrs.PartitionKey = attrKey;
-  attrs.RowKey = id;
-  tableService.updateEntity(acctsTable, attrs, callback);
+function delAttribute(aid, name, callback) {
+  var attr = {
+    PartitionKey: aid,
+    RowKey: name
+  };
+  tableService.deleteEntity(acctsTable, attr, callback);
 }
 
 function htmlStringify(obj) {
@@ -158,41 +189,22 @@ server.put('/:aid/Account', function(req, res) {
 });
 
 server.del('/:aid/Account', function(req, res) {
-  deleteAccount(req.params.aid, function(error) {
-    if (error)
-      res.send(404);
-    else
-      res.send(204);
+  getAttributesArray(req.params.aid, function(error, attrs) {
+    if (error) {
+      console.log(error);
+      res.send('Account not found', 404);
+      return;
+    }
+    deleteAccount(req.params.aid, attrs, function(error) {
+      if (error) {
+        console.log(error);
+        res.send(500);
+      }
+      else
+        res.send(204);
+    });
   });
 });
-
-/*
-server.get('/GetAccountIdByIdentity(:identity)', function(req, res) {
-  function reverseLookup(fstId, sndId) {
-    var accounts = getAllAccounts();
-    for (var aid in accounts)
-      if (accounts[aid].liveId == fstId)
-        return { aid: aid };
-    return null;
-  }
-
-  try {
-    // This is obviously extremely vulnerable to a JS injection,
-    // but this is just code for an internal demo with fake users
-    // so I'm not going to bother with sanitization.
-    var aid = eval('reverseLookup' + req.params.identity);
-    if (aid)
-      res.json(aid);
-    else
-      res.send('Account not found!', 404);
-  } catch (e) {
-    if (e.name == 'ReferenceError')
-      res.send('Invalid request. Did you remember to enclose your Live ID in single quotes?', 400);
-    else
-      throw e;
-  }
-});
-*/
 
 server.get('/:aid/Attributes(:name)', function(req, res) {
   getAttributes(req.params.aid, function(error, attrs) {
@@ -228,21 +240,14 @@ server.del('/:aid/Attributes(:name)', function(req, res) {
   // but this is just code for an internal demo with fake users
   // so I'm not going to bother with sanitization.
   var name = eval('id' + req.params.name);
-  getAttributes(req.params.aid, function(error, attrs) {
+  delAttribute(req.params.aid, name, function(error) {
     if (error) {
       console.log(error);
-      res.send("Account doesn't exist!", 404);
-      return;
+      res.send('Attribute could not be found', 404);
     }
-    delAttribute(req.params.aid, name, attrs, function(error) {
-      if (error) {
-        console.log(error);
-        res.send('Attribute could not be deleted', 500);
-      }
-      else {
-        res.send(204);
-      }
-    });
+    else {
+      res.send(204);
+    }
   });
 });
 
@@ -374,9 +379,11 @@ server.get('/:aid/Account/delAttr', function(req, res) {
   });
 });
 
+/*
 server.get('/about', function(_, res) {
   res.send('Nick is great');
 });
+*/
 
 server.listen(process.env.PORT || port, function() {
   console.log('Server listening');
