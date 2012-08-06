@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Contoco Accounts</title>
+    <title>Contoso Accounts</title>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript">
       function createAcct() {
@@ -29,13 +29,26 @@
       }
 
       function delAccts() {
+        $('#message').empty().append('Deleting accounts, this ' +
+            'may take up to 1 second per account.');
+        $('#all')[0].disabled = true;
+        $('#create')[0].disabled = true;
+        $('#delete')[0].disabled = true;
         var cboxes = document.getElementsByName('del');
         var deletes = [];
         for (var i = 0; i < cboxes.length; i++) {
+          cboxes[i].disabled = true;
           if (cboxes[i].checked)
             deletes.push(cboxes[i].value);
         }
         delAcct(0, deletes, '');
+      }
+      
+      function selectAll() {
+        var cboxes = document.getElementsByName('del');
+        for (var i = 0; i < cboxes.length; i++) {
+          cboxes[i].checked = $('#all')[0].checked;
+        }
       }
     </script>
   </head>
@@ -43,7 +56,7 @@
     All Accounts<br /><br />
     <table border="1">
       <tr>
-        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        <th><input type="checkbox" id="all" onclick="selectAll()" /></th>
         <th>Acct ID</th>
         <th>First</th>
         <th>Last</th>
@@ -59,5 +72,7 @@
     <button id="create" onclick="createAcct()">Create Account</button>
     &nbsp;&nbsp;&nbsp;
     <button id="delete" onclick="delAccts()">Delete Selected</button>
+    <br /><br />
+    <div id="message"></div>
   </body>
 </html>
