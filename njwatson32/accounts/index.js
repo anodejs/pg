@@ -381,7 +381,7 @@ server.get('/:aid/Account/delAttr', function(req, res) {
 
 
 server.get('/about', function(_, res) {
-  res.send('Nick is great');
+  res.send('<h1>This page now exists!</h1>');
 });
 
 
