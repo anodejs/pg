@@ -379,11 +379,11 @@ server.get('/:aid/Account/delAttr', function(req, res) {
   });
 });
 
-/*
+
 server.get('/about', function(_, res) {
   res.send('Nick is great');
 });
-*/
+
 
 server.listen(process.env.PORT || port, function() {
   console.log('Server listening');
