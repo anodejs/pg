@@ -57,7 +57,7 @@ function updateAccount(req, callback) {
 function deleteAccount(aid, attrs, callback) {
   var tasks = attrs; // rename
   tasks.push({ PartitionKey: aid, RowKey: acctRowKey });
-  //tableService.beginBatch();
+  tableService.beginBatch();
   async.forEach(tasks, function(task, callback) {
     tableService.deleteEntity(acctsTable, task, function(error) {
       if (!error) {
@@ -68,14 +68,14 @@ function deleteAccount(aid, attrs, callback) {
         callback(error);
       }
     });
-  }, callback /* function(error) {
+  }, function(error) {
     if (error) {
       console.log(error);
       callback(error);
       return;
     }
     tableService.commitBatch(callback);
-  } */);
+  });
 }
 
 // callback(error, attrsArray)
@@ -379,11 +379,11 @@ server.get('/:aid/Account/delAttr', function(req, res) {
   });
 });
 
-
+/*
 server.get('/about', function(_, res) {
   res.send('<h1>This page now exists!</h1>');
 });
-
+*/
 
 server.listen(process.env.PORT || port, function() {
   console.log('Server listening');
