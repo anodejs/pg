@@ -91,6 +91,7 @@ function getAttributesArray(aid, callback) {
 function getAttributes(aid, callback) {
   getAttributesArray(aid, function(error, attrs) {
     if (error) {
+      console.log(error);
       callback(error, []);
       return;
     }
@@ -157,8 +158,10 @@ server.configure(function() {
 
 server.get('/:aid/Account', function(req, res) {
   getAccount(req.params.aid, function(error, acct) {
-    if (error)
+    if (error) {
+      console.log(error);
       res.send('Account not found!', 404);
+    }
     else
       res.json(acct);
   });
@@ -209,6 +212,7 @@ server.del('/:aid/Account', function(req, res) {
 server.get('/:aid/Attributes(:name)', function(req, res) {
   getAttributes(req.params.aid, function(error, attrs) {
     if (error) {
+      console.log(error);
       res.send('Account does not exist.', 404);
       return;
     }
@@ -227,8 +231,10 @@ server.get('/:aid/Attributes(:name)', function(req, res) {
 server.put('/:aid/Attributes(:name)', function(req, res) {
   var name = req.body.name, value = req.body.value;
   putAttribute(req.params.aid, name, value, function(error) {
-    if (error)
+    if (error) {
+      console.log(error);
       res.send("Account doesn't exist!", 404);
+    }
     else
       res.json({ name: name, value: value });
   });
@@ -262,6 +268,7 @@ server.get('/dropTable', function(req, res) {
 server.get('/', function(req, res) {
   fs.readFile(path.join(__dirname, 'public', 'all_accounts.html'), function(err, data) {
     if (err) {
+      console.log(err);
       res.send(err, 500);
       return;
     }
@@ -294,11 +301,13 @@ server.get('/', function(req, res) {
 server.get('/:aid/Account/home', function(req, res) {
   getAcctAndAttrs(req.params.aid, function(error, acct, attrs) {
     if (error) {
+      console.log(error);
       res.send("Account not found!", 404);
       return;
     }
     fs.readFile(path.join(__dirname, 'public', 'account_home.html'), function(err, data) {
       if (err) {
+        console.log(err);
         res.send(err, 500);
         return;
       }
@@ -312,11 +321,13 @@ server.get('/:aid/Account/home', function(req, res) {
 server.get('/:aid/Account/edit', function(req, res) {
   getAccount(req.params.aid, function(error, acct) {
     if (error) {
+      console.log(error);
       res.send("Account not found!", 404);
       return;
     }
     fs.readFile(path.join(__dirname, 'public', 'edit_account.html'), function(err, data) {
       if (err) {
+        console.log(err);
         res.send(err, 500);
         return;
       }
@@ -348,6 +359,7 @@ server.get('/:aid/Account/addAttr', function(req, res) {
     }
     fs.readFile(path.join(__dirname, 'public', 'add_attr.html'), function(err, data) {
       if (err) {
+        console.log(err);
         res.send(err, 500);
         return;
       }
@@ -365,6 +377,7 @@ server.get('/:aid/Account/delAttr', function(req, res) {
     }
     fs.readFile(path.join(__dirname, 'public', 'del_attr.html'), function(err, data) {
       if (err) {
+        console.log(err);
         res.send(err, 500);
         return;
       }
