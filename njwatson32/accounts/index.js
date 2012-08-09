@@ -160,7 +160,7 @@ server.get('/:aid/Account', function(req, res) {
   getAccount(req.params.aid, function(error, acct) {
     if (error) {
       console.error(error);
-      res.send('Account not found!', 404);
+      res.send(error, 404);
     }
     else
       res.json(acct);
@@ -183,7 +183,7 @@ server.put('/:aid/Account', function(req, res) {
   updateAccount(req, function(error) {
     if (error) {
       console.error(error);
-      res.send('Account not found!', 404);
+      res.send(error, 404);
     }
     else {
       res.json(req.body);
@@ -195,7 +195,7 @@ server.del('/:aid/Account', function(req, res) {
   getAttributesArray(req.params.aid, function(error, attrs) {
     if (error) {
       console.error(error);
-      res.send('Account not found', 404);
+      res.send(error, 404);
       return;
     }
     deleteAccount(req.params.aid, attrs, function(error) {
@@ -213,7 +213,7 @@ server.get('/:aid/Attributes(:name)', function(req, res) {
   getAttributes(req.params.aid, function(error, attrs) {
     if (error) {
       console.error(error);
-      res.send('Account does not exist.', 404);
+      res.send(error, 404);
       return;
     }
     // This is obviously extremely vulnerable to a JS injection,
@@ -233,7 +233,7 @@ server.put('/:aid/Attributes(:name)', function(req, res) {
   putAttribute(req.params.aid, name, value, function(error) {
     if (error) {
       console.error(error);
-      res.send("Account doesn't exist!", 404);
+      res.send(error, 404);
     }
     else
       res.json({ name: name, value: value });
@@ -249,7 +249,7 @@ server.del('/:aid/Attributes(:name)', function(req, res) {
   delAttribute(req.params.aid, name, function(error) {
     if (error) {
       console.error(error);
-      res.send('Attribute could not be found', 404);
+      res.send(error, 404);
     }
     else {
       res.send(204);
@@ -284,7 +284,7 @@ server.get('/', function(req, res) {
     getAllAccounts(function(error, accounts) {
       if (error) {
         console.error(error);
-        res.send('Error communicating with Azure', 500);
+        res.send(error, 500);
       }
       var entries = '';
       for (var i = 0; i < accounts.length; i++) {
@@ -306,7 +306,7 @@ server.get('/:aid/Account/home', function(req, res) {
   getAcctAndAttrs(req.params.aid, function(error, acct, attrs) {
     if (error) {
       console.error(error);
-      res.send("Account not found!", 404);
+      res.send(error, 404);
       return;
     }
     fs.readFile(path.join(__dirname, 'public', 'account_home.html'), function(err, data) {
@@ -326,7 +326,7 @@ server.get('/:aid/Account/edit', function(req, res) {
   getAccount(req.params.aid, function(error, acct) {
     if (error) {
       console.error(error);
-      res.send("Account not found!", 404);
+      res.send(error, 404);
       return;
     }
     fs.readFile(path.join(__dirname, 'public', 'edit_account.html'), function(err, data) {
@@ -358,7 +358,7 @@ server.get('/:aid/Account/addAttr', function(req, res) {
   getAccount(req.params.aid, function(error, acct) {
     if (error) {
       console.error(error);
-      res.send("Account not found!", 404);
+      res.send(error, 404);
       return;
     }
     fs.readFile(path.join(__dirname, 'public', 'add_attr.html'), function(err, data) {
@@ -376,7 +376,7 @@ server.get('/:aid/Account/delAttr', function(req, res) {
   getAcctAndAttrs(req.params.aid, function(error, acct, attrs) {
     if (error) {
       console.error(error);
-      res.send("Account not found!", 404);
+      res.send(error, 404);
       return;
     }
     fs.readFile(path.join(__dirname, 'public', 'del_attr.html'), function(err, data) {
