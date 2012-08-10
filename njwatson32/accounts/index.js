@@ -395,11 +395,11 @@ server.get('/:aid/Account/delAttr', function(req, res) {
     });
   });
 });
-
-server.get('/foo', function(_, res) {
+/*
+server.get('/about', function(_, res) {
   res.send('<h1>This page now exists!</h1>');
 });
-
+*/
 server.listen(process.env.PORT || port, function() {
   console.log('Server listening');
 });
