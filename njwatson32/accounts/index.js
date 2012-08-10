@@ -396,7 +396,7 @@ server.get('/:aid/Account/delAttr', function(req, res) {
   });
 });
 
-server.get('/about', function(_, res) {
+server.get('/foo', function(_, res) {
   res.send('<h1>This page now exists!</h1>');
 });
 
