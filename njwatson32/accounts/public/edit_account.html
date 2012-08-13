@@ -14,7 +14,8 @@
     }
 
     function editAcct() {
-      e("edit").disabled = true;
+      e('edit').disabled = true;
+      e('cancel').disabled = true;
       var aid = e('aid').value;
       var fst = '', lst = '', cmp = '';
       if (e('cmp') == null) {
@@ -49,8 +50,9 @@
             }
           },
           error: function(jqXHR, textStatus, errorThrown) {
-            e("edit").disabled = false;
-            alert('o noes!');
+            e('edit').disabled = false;
+            e('cancel').disabled = false;
+            alert(errorThrown);
           }
         });
   }

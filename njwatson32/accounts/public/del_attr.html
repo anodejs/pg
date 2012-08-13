@@ -9,6 +9,8 @@
       }
 
       function delAttr() {
+        $('#del')[0].disabled = true;
+        $('#cancel')[0].disabled = true;
         var name = document.getElementById('alist').value;
         $.ajax({
           url: "../Attributes('" + name + "')",
@@ -23,6 +25,8 @@
           },
           error: function(jqXHR, textStatus, errorThrown) {
             alert(textStatus);
+            $('#del')[0].disabled = false;
+            $('#cancel')[0].disabled = false;
           }
         });
       }

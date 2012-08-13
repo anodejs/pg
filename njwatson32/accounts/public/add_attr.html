@@ -11,8 +11,16 @@
       function addAttr() {
         var name = document.getElementById('name').value;
         var value = document.getElementById('value').value;
-        if (name == '' || value == '')
+        if (name == '' || value == '') {
           alert('Must be non-empty');
+          return;
+        }
+        if (name == '_') {
+          alert('_ is not a valid name');
+          return;
+        }
+        $('#add')[0].disabled = true;
+        $('#cancel')[0].disabled = true;
         $.ajax({
           url: "../Attributes('" + name + "')",
           type: "PUT",
@@ -28,6 +36,8 @@
           },
           error: function(jqXHR, textStatus, errorThrown) {
             alert(textStatus);
+            $('#add')[0].disabled = false;
+            $('#cancel')[0].disabled = false;
           }
         });
       }
