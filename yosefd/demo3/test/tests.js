@@ -9,8 +9,8 @@ exports.test1 = function(test) {
 
   console.info('context', test.context.protocol + test.context.host);
 
-  var protocol = (test.context && text.context.protocol) // || 'http://';
-  var host = (test.context && text.context.host) // || 'localhost:5000';
+  var protocol = test.context && test.context.protocol) || 'http://';
+  var host = (test.context && test.context.host) || 'localhost:5000';
 
   console.info('target', protocol + host);
 
