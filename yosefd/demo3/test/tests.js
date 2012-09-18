@@ -7,7 +7,7 @@ exports.test1 = function(test) {
 
   //var host = (test.context && text.context.host) || 'localhost:5000';
 
-  console.info('context', test.context);
+  console.info('context', test.context.protocol + test.context.host);
 
   test.done();
 
