@@ -9,6 +9,11 @@ exports.test1 = function(test) {
 
   console.info('context', test.context.protocol + test.context.host);
 
+  var protocol = (test.context && text.context.protocol) || 'http://';
+  var host = (test.context && text.context.host) || 'localhost:5000';
+
+  console.info('target', protocol + host);
+
   test.done();
 
   // request('http://' + target, function(err, res) {
