@@ -3,7 +3,7 @@ var request = require('request');
 console.info('loading demo3 test');
 
 exports.test1 = function(test) {
-  console.info('running test1');
+  console.info('running test1', test);
 
   var target = (test.context && text.context.host) || 'localhost:5000';
 
