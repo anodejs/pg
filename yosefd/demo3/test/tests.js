@@ -9,16 +9,16 @@ exports.test1 = function(test) {
 
   console.info('context', test.context.protocol + test.context.host);
 
-  var protocol = test.context && test.context.protocol) || 'http://';
+  var protocol = (test.context && test.context.protocol) || 'http://';
   var host = (test.context && test.context.host) || 'localhost:5000';
+  var target = protocol + host;
 
-  console.info('target', protocol + host);
+  console.info('target', target);
 
-  test.done();
-
-  // request('http://' + target, function(err, res) {
-  //   console.info('err:', err);
-  //   test.equals(res.statusCode, 200, 'expecting 200');
-  //   test.done();
-  // });
+  request(target, function(err, res) {
+    console.info('err:', err);
+    test.ok(!err);
+    test.equals(res.statusCode, 200, 'expecting 200');
+    test.done();
+  });
 }
