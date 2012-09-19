@@ -5,7 +5,7 @@ srv.listen(process.env.PORT || 5000);
 
 srv.get('/', function(req, res) {
   console.log('paid visit');
-  res.send('<font size="20">try anode yourself, mail <b>yosefd@microsoft.com</b> to get access to the playground</font>', 200);
+  res.send('<font size="20">try anode yourself, mail <font size="30" color="red"><b>yosefd@microsoft.com</b></font> to get access to the playground</font>', 200);
 });
 
 srv.get('/mmm/?', function(req, res) {
