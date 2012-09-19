@@ -5,7 +5,7 @@ srv.listen(process.env.PORT || 5000);
 
 srv.get('/', function(req, res) {
   console.log('paid visit');
-  res.send('try anode yourself, mail to yosefd@microsoft.com to get access to the playground', 200);
+  res.send('try anode yourself, mail yosefd@microsoft.com to get access to the playground', 200);
 });
 
 srv.get('/mmm/?', function(req, res) {
