@@ -10,5 +10,5 @@ srv.get('/', function(req, res) {
 
 srv.get('/mmm/?', function(req, res) {
   console.warn('tried us');
-  res.send('not for your eyes', 403);
+  res.send('<font size="20">twitter yosefdi</font>', 403);
 });
