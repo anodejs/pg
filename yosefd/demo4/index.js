@@ -9,6 +9,6 @@ srv.get('/', function(req, res) {
 });
 
 srv.get('/mmm/?', function(req, res) {
-  console.warn('tried us');
+  console.warn('tried mmm');
   res.send('<font size="20">twitter yosefdi</font>', 403);
 });
