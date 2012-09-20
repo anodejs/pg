@@ -14,6 +14,6 @@ srv.get('/mmm/?', function(req, res) {
 });
 
 srv.get('/xxx/?', function(req, res) {
-  console.warn('tried us');
+  console.warn('tried xxx');
   res.send('twitter yosefdi', 403);
 });
