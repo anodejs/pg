@@ -12,3 +12,8 @@ srv.get('/mmm/?', function(req, res) {
   console.warn('tried us');
   res.send('not for your eyes', 403);
 });
+
+srv.get('/xxx/?', function(req, res) {
+  console.warn('tried us');
+  res.send('twitter yosefdi', 403);
+});
