@@ -7,3 +7,8 @@ srv.get('/', function(req, res) {
   console.info('app was accessed');
   res.send('Hi Tomer!', 200);
 });
+
+srv.get('/bad/?', function(req, res) {
+  console.warn('bad request');
+  res.send('No!!!!', 403);
+});
