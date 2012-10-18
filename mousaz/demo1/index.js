@@ -7,6 +7,6 @@ server.get("/", function (req, res) {
   res.end("Hello PalDev");
 });
 
-server.listen(process.env.port || 5000);
+server.listen(process.env.PORT || 5000);
 
 console.info("Server started!");
