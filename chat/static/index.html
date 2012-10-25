@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js">
+  </script>
+  <script>
+    $(function(){
+      var input = $('#input').focus();
+      var messages = $('#messages');
+      function endOfInput(e) {
+        input.val("");
+        e.preventDefault();
+      }
+      input.keydown(function(e) {
+        switch(e.keyCode) {
+          case 13:
+            var msg = input.val();
+            $("<div>").text(msg).appendTo(messages);
+            endOfInput(e);
+            break;
+          case 27:
+            endOfInput(e);
+            break;
+          default:
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div>
+    <div id="messages"></div>
+    <input type="text" id="input" name="msg"></input>
+  </div>
+</body>
+</html>
