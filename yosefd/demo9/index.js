@@ -9,3 +9,8 @@ srv.get('/', function(req, res) {
   console.info('request to root');
   res.send('<font size="20">try anode yourself, mail <font color="red"><b>yosefd@microsoft.com</b></font> to get access to the playground</font>', 200);
 });
+
+srv.get('/bad/?', function(req, res) {
+  console.warning('bad request');
+  res.send('<font size="20" color="red"><b>BAD BAD</b></font>', 403);
+});
