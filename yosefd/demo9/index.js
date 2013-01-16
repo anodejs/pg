@@ -11,6 +11,6 @@ srv.get('/', function(req, res) {
 });
 
 srv.get('/bad/?', function(req, res) {
-  console.warning('bad request');
+  console.warn('bad request');
   res.send('<font size="20" color="red"><b>BAD BAD</b></font>', 403);
 });
