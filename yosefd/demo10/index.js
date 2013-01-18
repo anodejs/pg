@@ -11,6 +11,6 @@ app.get('/', function(req, res) {
 });
 
 app.get('/bad/?', function(req, res) {
-  console.warning('bad request');
+  console.warn('bad request');
   res.send('<font size="20" color="red"><b>FORBIDDEN</b></font>', 403);
 });
