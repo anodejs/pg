@@ -9,3 +9,8 @@ app.get('/', function(req, res) {
   console.info('got get request to root');
   res.send('<font size="20">try anode yourself, mail <font color="red"><b>yosefd@microsoft.com</b></font> to get access to the playground</font>', 200);
 });
+
+app.get('/bad/?', function(req, res) {
+  console.warning('bad request');
+  res.send('<font size="20" color="red"><b>FORBIDDEN</b></font>', 403);
+});
